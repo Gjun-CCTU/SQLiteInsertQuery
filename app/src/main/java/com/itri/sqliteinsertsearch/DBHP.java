@@ -131,4 +131,52 @@ public class DBHP extends SQLiteOpenHelper {
         }
         return list;
     }
+
+    public ArrayList<DbData>keyWordQuery(String keyword){
+        SQLiteDatabase db = getWritableDatabase();
+        String selectionArgs[] = {"%"+keyword+"%"};
+        Cursor cursor =  db.rawQuery("SELECT * FROM teacher WHERE address LIKE ?;", selectionArgs);
+        ArrayList<DbData> list = new ArrayList<DbData>();
+        while(cursor.moveToNext()){
+            String id =  cursor.getString(0);
+            String name =  cursor.getString(1);
+            String phoneNo =  cursor.getString(2);
+            String address =  cursor.getString(3);
+            DbData data =  new DbData(id, name, phoneNo, address);
+            list.add(data);
+        }
+        return  list;
+    }
+    public ArrayList<DbData> keyWordQuery(DbData data){
+        SQLiteDatabase db = getWritableDatabase();
+        ArrayList<DbData> list = new ArrayList<>();
+        String columns[] = {"id", "name", "phoneNo", "address"};
+        String selection = "address= '"+data.getAddress()+"' ";
+        String orderBy = "id";
+        Cursor cursor =  db.query("teacher", columns, selection, null, null, null, orderBy);
+        while(cursor.moveToNext()){
+            String s[] = new String[cursor.getColumnCount()];
+            for(int i = 0; i < cursor.getColumnCount(); i++){
+                s[i] = cursor.getString(i);
+            }
+            DbData dbData =  new DbData(s[0], s[1], s[2], s[3]);
+            list.add(dbData);
+        }
+        return list;
+    }
+
+    public ArrayList<DbData> queryAll(Context context){
+        SQLiteDatabase db = context.openOrCreateDatabase("YPU.db", Context.MODE_PRIVATE, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM teacher;", null);
+        ArrayList<DbData> list = new ArrayList<>();
+        while(cursor.moveToNext()){
+            String s[] = new String[cursor.getColumnCount()];
+            for(int i = 0; i < cursor.getColumnCount(); i++){
+                s[i] = cursor.getString(i);
+            }
+            DbData dbData =  new DbData(s[0], s[1], s[2], s[3]);
+            list.add(dbData);
+        }
+        return list;
+    }
 }

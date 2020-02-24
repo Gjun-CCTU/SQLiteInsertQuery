@@ -12,10 +12,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-     Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, btn11, btn12, btn13;
+     Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, btn11, btn12, btn13, btn14, btn15, btn16;
      TextView tv1;
      DBHP dbhp;
-     EditText et2, et3, et4, et5;
+     EditText et2, et3, et4, et5, et6;
      ArrayList<String> list;
      ArrayList<DbData> AL;
      int index = 0;
@@ -36,11 +36,15 @@ public class MainActivity extends AppCompatActivity {
         btn11 = findViewById(R.id.button11);
         btn12 = findViewById(R.id.button12);
         btn13 = findViewById(R.id.button13);
+        btn14 = findViewById(R.id.button14);
+        btn15 = findViewById(R.id.button15);
+        btn16 = findViewById(R.id.button16);
         tv1 = findViewById(R.id.textView);
         et2 = findViewById(R.id.editText2);
         et3 = findViewById(R.id.editText3);
         et4 = findViewById(R.id.editText4);
         et5 = findViewById(R.id.editText5);
+        et6 = findViewById(R.id.editText6);
         if(dbhp == null)
             dbhp = new DBHP(MainActivity.this);
         AL = dbhp.queryALL();
@@ -216,6 +220,69 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btn14.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String keyword = et6.getText().toString();
+                AL = dbhp.keyWordQuery(keyword);
+                showData(0);
+                StringBuilder sb = new StringBuilder("模糊查詢如下:\n");
+                if(AL.size()>0){
+                    for(int i=0; i<AL.size(); i++){
+                        sb.append(AL.get(i).getId()+"\t");
+                        sb.append(AL.get(i).getName()+"\t");
+                        sb.append(AL.get(i).getPhoneNo()+"\t");
+                        sb.append(AL.get(i).getAddress()+"\n");
+                    }
+                }else{
+                    sb.append("查無資料...");
+                }
+                tv1.setText(sb);
+            }
+        });
+        btn15.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String id =  et2.getText().toString();
+                String name =  et3.getText().toString();
+                String phoneNo =  et4.getText().toString();
+                String address =  et5.getText().toString();
+                DbData data = new DbData(id, name, phoneNo, address);
+                AL = dbhp.keyWordQuery(data);
+                showData(0);
+                StringBuilder sb = new StringBuilder("Query查詢如下:\n");
+                if(AL.size()>0){
+                    for(int i=0; i<AL.size(); i++){
+                        sb.append(AL.get(i).getId()+"\t");
+                        sb.append(AL.get(i).getName()+"\t");
+                        sb.append(AL.get(i).getPhoneNo()+"\t");
+                        sb.append(AL.get(i).getAddress()+"\n");
+                    }
+                }else{
+                    sb.append("查無資料...");
+                }
+                tv1.setText(sb);
+            }
+        });
+        btn16.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AL = dbhp.queryAll(MainActivity.this);
+                showData(0);
+                StringBuilder sb = new StringBuilder("Query查詢如下:\n");
+                if(AL.size()>0){
+                    for(int i=0; i<AL.size(); i++){
+                        sb.append(AL.get(i).getId()+"\t");
+                        sb.append(AL.get(i).getName()+"\t");
+                        sb.append(AL.get(i).getPhoneNo()+"\t");
+                        sb.append(AL.get(i).getAddress()+"\n");
+                    }
+                }else{
+                    sb.append("查無資料...");
+                }
+                tv1.setText(sb);
+            }
+        });
     }
 
     private void showData(int index) {
